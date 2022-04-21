@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template,flash,redirect,session,abort,jsonify
 from models import Model
-from depression_detection_tweets import DepressionDetection
-from TweetModel import process_message
+# from depression_detection_tweets import DepressionDetection
+# from TweetModel import process_message
 import os
 
 app = Flask(__name__)
@@ -28,20 +28,6 @@ def logout():
     session['logged_in'] = False
     return root()
 
-
-@app.route("/sentiment")
-def sentiment():
-    return render_template("sentiment.html")
-
-
-@app.route("/predictSentiment", methods=["POST"])
-def predictSentiment():
-    message = request.form['form10']
-    pm = process_message(message)
-    result = DepressionDetection.classify(pm, 'bow') or DepressionDetection.classify(pm, 'tf-idf')
-    return render_template("tweetresult.html",result=result)
-
-
 @app.route('/predict', methods=["POST"])
 def predict():
     q1 = int(request.form['a1'])
@@ -57,7 +43,7 @@ def predict():
 
     values = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10]
     model = Model()
-    classifier = model.svm_classifier()
+    classifier = model.decisionTree_classifier()
     prediction = classifier.predict([values])
     if prediction[0] == 0:
             result = 'Your Depression test result : No Depression'
